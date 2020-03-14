@@ -1,0 +1,1 @@
+dub run dstep -- libs/onnxruntime-win-x64-1.2.0/include/onnxruntime_c_api.h -o source/bindbc/onnxruntime/bind/onnxruntime.d

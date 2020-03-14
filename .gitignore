@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/bindbc-onnxruntime
+bindbc-onnxruntime.so
+bindbc-onnxruntime.dylib
+bindbc-onnxruntime.dll
+bindbc-onnxruntime.a
+bindbc-onnxruntime.lib
+bindbc-onnxruntime-test-*
+*.exe
+*.o
+*.obj
+*.lst

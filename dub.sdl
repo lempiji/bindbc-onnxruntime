@@ -1,0 +1,5 @@
+name "bindbc-onnxruntime"
+description "Dynamic bindings to ONNX Runtime, compatible with -betterC, @nogc, and nothrow."
+authors "lempiji"
+license "MIT"
+dependency "bindbc-loader" version="~>0.2.1"

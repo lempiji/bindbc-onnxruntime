@@ -1,0 +1,6 @@
+name "squeezenet"
+description "A minimal D application."
+authors "lempiji"
+license "MIT"
+dependency "bindbc-onnxruntime" path="../../"
+//versions "ONNXRuntime_Dynamic"
