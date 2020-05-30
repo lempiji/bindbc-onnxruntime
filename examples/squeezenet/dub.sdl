@@ -3,4 +3,5 @@ description "A minimal D application."
 authors "lempiji"
 license "MIT"
 dependency "bindbc-onnxruntime" path="../../"
-//versions "ONNXRuntime_Dynamic"
+
+copyFiles "libs/x86_64/onnxruntime.dll" platform="windows-x86_64"
