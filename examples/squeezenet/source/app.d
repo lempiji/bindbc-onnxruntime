@@ -1,6 +1,7 @@
 import std;
 
 import bindbc.onnxruntime;
+import imageformats;
 
 void main()
 {
@@ -80,7 +81,7 @@ void main()
 		checkStatus(ort.GetTensorElementType(tensor_info, &type));
 		writeln("Input ", i, " : type=", type);
 
-		// // print input shapes/dims
+		// print input shapes/dims
 		size_t num_dims;
 		checkStatus(ort.GetDimensionsCount(tensor_info, &num_dims));
 		writeln("Input ", i, " : num_dims=", num_dims);
@@ -98,11 +99,10 @@ void main()
 	size_t input_tensor_size = 224 * 224 * 3; // simplify ... using known dim values to calculate size
 	// use OrtGetTensorShapeElementCount() to get official size!
 
-	auto input_tensor_values = new float[](input_tensor_size);
+	auto image = read_image("image.png", ColFmt.RGB);
+	assert(image.pixels.length == input_tensor_size);
+	auto input_tensor_values = preprocess(image);
 
-	// initialize input data with values in [0.0, 1.0]
-	foreach (i, ref v; input_tensor_values)
-		v = cast(float) i / (input_tensor_size + 1);
 
 	// create input tensor object from data values
 	OrtMemoryInfo* memory_info;
@@ -135,9 +135,34 @@ void main()
 
 	float* floatarr;
 	checkStatus(ort.GetTensorMutableData(output_tensor, cast(void**)&floatarr));
-	assert(abs(floatarr[0] - 0.000045) < 1e-6);
 
 	// check output
-	auto index = floatarr[0 .. 1000].maxIndex();
-	writeln("Category: ", index, " (", floatarr[index], ")");
+	auto result = new Tuple!(size_t, float)[](1000);
+	foreach (i, v; floatarr[0 .. 1000])
+	{
+		result[i] = tuple(i, v);
+	}
+	result.sort!"a[1] > b[1]"();
+
+	auto labels = loadLabels();
+	foreach (x; result[0 .. 10])
+	{
+		writeln(labels[x[0]], " : ", x[1]);
+	}
+}
+
+float[] preprocess(IFImage image)
+{
+	import mir.ndslice : sliced, flattened, transposed;
+
+	auto result = new float[](image.pixels.length);
+	auto data = image.pixels.sliced(image.w, image.h, image.c).transposed(2, 0, 1);
+	result.sliced[] = data.flattened[];
+
+	return result;
+}
+
+string[] loadLabels()
+{
+	return File("synset.txt").byLineCopy().array();
 }

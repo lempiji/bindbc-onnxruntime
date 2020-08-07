@@ -2,6 +2,7 @@ name "squeezenet"
 description "A minimal D application."
 authors "lempiji"
 license "MIT"
+dependency "mir-algorithm" version="~>3.9.14"
+dependency "imageformats" version="~>7.0.2"
 dependency "bindbc-onnxruntime" path="../../"
-
 copyFiles "libs/x86_64/onnxruntime.dll" platform="windows-x86_64"
