@@ -7,8 +7,11 @@ import bindbc.onnxruntime.v12.types;
 version (BindONNXRuntime_Static)
 {
     extern (C) OrtApiBase* OrtGetApiBase();
-    OrtStatus* OrtSessionOptionsAppendExecutionProvider_CUDA(OrtSessionOptions* options, int device_id);
-    OrtStatus* OrtSessionOptionsAppendExecutionProvider_CPU(OrtSessionOptions* options, int use_arena);
+
+    version (WITH_CUDA){
+        OrtStatus* OrtSessionOptionsAppendExecutionProvider_CUDA(OrtSessionOptions* options, int device_id);
+        OrtStatus* OrtSessionOptionsAppendExecutionProvider_CPU(OrtSessionOptions* options, int use_arena);
+    }
 }
 else
 {
@@ -18,8 +21,10 @@ else
 extern (C) @nogc nothrow:
 
     __gshared const(OrtApiBase)* function() OrtGetApiBase;
-    __gshared OrtStatus* function(OrtSessionOptions* options, int device_id) OrtSessionOptionsAppendExecutionProvider_CUDA;
-    __gshared OrtStatus* function(OrtSessionOptions* options, int use_arena) OrtSessionOptionsAppendExecutionProvider_CPU;
+    version (WITH_CUDA){
+        __gshared OrtStatus* function(OrtSessionOptions* options, int device_id) OrtSessionOptionsAppendExecutionProvider_CUDA;
+        __gshared OrtStatus* function(OrtSessionOptions* options, int use_arena) OrtSessionOptionsAppendExecutionProvider_CPU;
+    }
 
     ONNXRuntimeSupport loadedONNXVersion()
     {
@@ -76,9 +81,10 @@ extern (C) @nogc nothrow:
         const errCount = errorCount();
 
         lib.bindSymbol(cast(void**)&OrtGetApiBase, "OrtGetApiBase");
-        lib.bindSymbol(cast(void**)&OrtSessionOptionsAppendExecutionProvider_CUDA, "OrtSessionOptionsAppendExecutionProvider_CUDA");
-        lib.bindSymbol(cast(void**)&OrtSessionOptionsAppendExecutionProvider_CPU, "OrtSessionOptionsAppendExecutionProvider_CPU");
-
+        version (WITH_CUDA){
+            lib.bindSymbol(cast(void**)&OrtSessionOptionsAppendExecutionProvider_CUDA, "OrtSessionOptionsAppendExecutionProvider_CUDA");
+            lib.bindSymbol(cast(void**)&OrtSessionOptionsAppendExecutionProvider_CPU, "OrtSessionOptionsAppendExecutionProvider_CPU");
+        }
 
         if (errCount != errorCount())
         {
