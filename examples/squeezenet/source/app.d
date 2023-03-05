@@ -41,6 +41,14 @@ void main()
 	checkStatus(ort.CreateSessionOptions(&session_options));
 	scope (exit)
 		ort.ReleaseSessionOptions(session_options);
+
+	// Configuration in dub.sdl controls the enabled execution providers.
+	// GPU library may be required depending on the execution provider.
+	// See https://onnxruntime.ai/docs/execution-providers/ for details.
+	version (WITH_CUDA)
+	{
+		checkStatus(OrtSessionOptionsAppendExecutionProvider_CUDA(session_options, 0));
+	}
 	ort.SetIntraOpNumThreads(session_options, 1);
 
 	ort.SetSessionGraphOptimizationLevel(session_options, GraphOptimizationLevel.ORT_ENABLE_BASIC);
