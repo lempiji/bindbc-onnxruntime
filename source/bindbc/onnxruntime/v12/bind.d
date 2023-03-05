@@ -8,7 +8,9 @@ version (BindONNXRuntime_Static)
 {
     extern (C) OrtApiBase* OrtGetApiBase();
 
-    version (WITH_CUDA){
+    version (WITH_CUDA)
+    {
+        pragma(msg, "WITH_CUDA");
         OrtStatus* OrtSessionOptionsAppendExecutionProvider_CUDA(OrtSessionOptions* options, int device_id);
         OrtStatus* OrtSessionOptionsAppendExecutionProvider_CPU(OrtSessionOptions* options, int use_arena);
     }
@@ -21,7 +23,9 @@ else
 extern (C) @nogc nothrow:
 
     __gshared const(OrtApiBase)* function() OrtGetApiBase;
-    version (WITH_CUDA){
+    version (WITH_CUDA)
+    {
+        pragma(msg, "WITH_CUDA");
         __gshared OrtStatus* function(OrtSessionOptions* options, int device_id) OrtSessionOptionsAppendExecutionProvider_CUDA;
         __gshared OrtStatus* function(OrtSessionOptions* options, int use_arena) OrtSessionOptionsAppendExecutionProvider_CPU;
     }
@@ -54,7 +58,7 @@ extern (C) @nogc nothrow:
         }
         else
             static assert(false,
-                    "bindbc-onnxruntime support for ONNX Runtime 1.2 is not implemented on this platform.");
+                "bindbc-onnxruntime support for ONNX Runtime 1.2 is not implemented on this platform.");
 
         ONNXRuntimeSupport ret;
         foreach (libName; libNames)
@@ -70,7 +74,7 @@ extern (C) @nogc nothrow:
     }
 
     ONNXRuntimeSupport loadONNXRuntimeByLibName(const char* libName)
-    in(libName !is null)
+    in (libName !is null)
     {
         lib = load(libName);
         if (lib == invalidHandle)
@@ -81,7 +85,8 @@ extern (C) @nogc nothrow:
         const errCount = errorCount();
 
         lib.bindSymbol(cast(void**)&OrtGetApiBase, "OrtGetApiBase");
-        version (WITH_CUDA){
+        version (WITH_CUDA)
+        {
             lib.bindSymbol(cast(void**)&OrtSessionOptionsAppendExecutionProvider_CUDA, "OrtSessionOptionsAppendExecutionProvider_CUDA");
             lib.bindSymbol(cast(void**)&OrtSessionOptionsAppendExecutionProvider_CPU, "OrtSessionOptionsAppendExecutionProvider_CPU");
         }
