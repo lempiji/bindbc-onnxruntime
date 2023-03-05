@@ -5,4 +5,4 @@ license "MIT"
 
 targetType "staticLibrary"
 
-dependency "bindbc-loader" version=">0.3.0"
+dependency "bindbc-loader" version="~>1.0.1"

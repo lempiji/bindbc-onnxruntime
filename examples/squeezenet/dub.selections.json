@@ -1,7 +1,10 @@
 {
 	"fileVersion": 1,
 	"versions": {
-		"bindbc-loader": "0.3.0",
-		"bindbc-onnxruntime": {"path":"../../"}
+		"bindbc-loader": "1.0.1",
+		"bindbc-onnxruntime": {"path":"../../"},
+		"imageformats": "7.0.2",
+		"mir-algorithm": "3.9.47",
+		"mir-core": "1.5.2"
 	}
 }
