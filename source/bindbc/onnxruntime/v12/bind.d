@@ -10,7 +10,6 @@ version (BindONNXRuntime_Static)
 
     version (WITH_CUDA)
     {
-        pragma(msg, "WITH_CUDA");
         OrtStatus* OrtSessionOptionsAppendExecutionProvider_CUDA(OrtSessionOptions* options, int device_id);
         OrtStatus* OrtSessionOptionsAppendExecutionProvider_CPU(OrtSessionOptions* options, int use_arena);
     }
@@ -25,7 +24,6 @@ extern (C) @nogc nothrow:
     __gshared const(OrtApiBase)* function() OrtGetApiBase;
     version (WITH_CUDA)
     {
-        pragma(msg, "WITH_CUDA");
         __gshared OrtStatus* function(OrtSessionOptions* options, int device_id) OrtSessionOptionsAppendExecutionProvider_CUDA;
         __gshared OrtStatus* function(OrtSessionOptions* options, int use_arena) OrtSessionOptionsAppendExecutionProvider_CPU;
     }
